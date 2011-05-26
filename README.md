@@ -5,3 +5,4 @@ GitHub URL: [https://github.com/pikanji/CameraPreviewSample](https://github.com/
 
 ### Git Tags
 * minimum -- Minimum code implementing camera preview.
+* orientation -- Display in correct orientation.
