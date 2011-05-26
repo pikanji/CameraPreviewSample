@@ -3,17 +3,23 @@ package net.pikanji.camerapreviewsample;
 
 import java.io.IOException;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
+import android.os.Build;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+    private Activity mActivity;
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
-    public CameraPreview(Context context) {
-        super(context); // Always necessary
+    public CameraPreview(Activity activity) {
+        super(activity); // Always necessary
+        mActivity = activity;
         mHolder = getHolder();
         mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -36,7 +42,29 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        mCamera.stopPreview();
 
+        // Set orientation
+        boolean portrait = isPortrait();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+            // 2.1 and before
+            Parameters mParam = mCamera.getParameters();
+            if (portrait) {
+                mParam.set("orientation", "portrait");
+            } else {
+                mParam.set("orientation", "landscape");
+            }
+            mCamera.setParameters(mParam);
+        } else {
+            // 2.2 and later
+            if (portrait) {
+                mCamera.setDisplayOrientation(90);
+            } else {
+                mCamera.setDisplayOrientation(0);
+            }
+        }
+
+        mCamera.startPreview();
     }
 
     @Override
@@ -49,4 +77,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mCamera = null;
     }
 
+    protected boolean isPortrait() {
+        return (mActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+    }
 }
