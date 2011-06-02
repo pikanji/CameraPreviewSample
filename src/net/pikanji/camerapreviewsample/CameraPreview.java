@@ -11,6 +11,7 @@ import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
@@ -68,54 +69,62 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
 
         // Set width & height
-        int w = width;
-        int h = height;
+        int previewWidth = width;
+        int previewHeight = height;
         // Meaning of width and height is switched for preview when portrait,
         // while it is the same as user's view for surface and metrics.
         // That is, width must always be larger than height for setPreviewSize.
         if (portrait) {
-            w = height;
-            h = width;
+            previewWidth = height;
+            previewHeight = width;
         }
 
         // Actual preview size will be one of the sizes obtained by getSupportedPreviewSize.
         // It is the one that is the largest in both width and height no larger than given size in setPreviewSize.
         List<Size> sizes = mParam.getSupportedPreviewSizes();
         for (Size size : sizes) {
-            if ((size.width <= w) && (size.height <= h)) {
-                w = size.width;
-                h = size.height;
+            if ((size.width <= previewWidth) && (size.height <= previewHeight)) {
+                previewWidth = size.width;
+                previewHeight = size.height;
                 break;
             }
         }
 
-        mParam.setPreviewSize(w, h);
+        mParam.setPreviewSize(previewWidth, previewHeight);
 
         // Adjust SurfaceView size
         ViewGroup.LayoutParams layoutParams = this.getLayoutParams();
-        float tmpH, tmpW;
-        if (portrait) {
-            tmpH = w;
-            tmpW = h;
+        if(portrait) {
+            layoutParams.height = previewWidth;
+            layoutParams.width = previewHeight;
         } else {
-            tmpH = h;
-            tmpW = w;
+            layoutParams.height = previewHeight;
+            layoutParams.width = previewWidth;
+        }
+
+        float layoutHeight, layoutWidth;
+        if (portrait) {
+            layoutHeight = previewWidth;
+            layoutWidth = previewHeight;
+        } else {
+            layoutHeight = previewHeight;
+            layoutWidth = previewWidth;
         }
 
         DisplayMetrics metrics = new DisplayMetrics();
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
         float factH, factW, fact;
-        factH = metrics.heightPixels / tmpH;
-        factW = metrics.widthPixels / tmpW;
+        factH = metrics.heightPixels / layoutHeight;
+        factW = metrics.widthPixels / layoutWidth;
         // Select smaller factor, because the surface cannot be set to the size larger than display metrics.
         if (factH < factW) {
             fact = factH;
         } else {
             fact = factW;
         }
-        layoutParams.height = (int)(tmpH * fact);
-        layoutParams.width = (int)(tmpW * fact);
+        layoutParams.height = (int)(layoutHeight * fact);
+        layoutParams.width = (int)(layoutWidth * fact);
         this.setLayoutParams(layoutParams);
 
         mCamera.setParameters(mParam);
