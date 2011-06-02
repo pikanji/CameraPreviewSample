@@ -111,12 +111,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             layoutWidth = previewWidth;
         }
 
-        DisplayMetrics metrics = new DisplayMetrics();
-        mActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
         float factH, factW, fact;
-        factH = metrics.heightPixels / layoutHeight;
-        factW = metrics.widthPixels / layoutWidth;
+        factH = height / layoutHeight;
+        factW = width / layoutWidth;
         // Select smaller factor, because the surface cannot be set to the size larger than display metrics.
         if (factH < factW) {
             fact = factH;
