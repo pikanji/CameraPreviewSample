@@ -93,6 +93,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             }
         }
 
+        // Only for debugging
         for (Size size : sizes) {
             if ((size.width <= previewWidth) && (size.height <= previewHeight)) {
                 Log.v(LOG_TAG, "w: " + size.width + ", h: " + size.height);
@@ -104,15 +105,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         Log.v(LOG_TAG, "Preview Actual Size - w: " + previewWidth + ", h: " + previewHeight);
 
         // Adjust SurfaceView size
-//        ViewGroup.LayoutParams layoutParams = this.getLayoutParams();
-//        if(portrait) {
-//            layoutParams.height = previewWidth;
-//            layoutParams.width = previewHeight;
-//        } else {
-//            layoutParams.height = previewHeight;
-//            layoutParams.width = previewWidth;
-//        }
-
         float layoutHeight, layoutWidth;
         if (portrait) {
             layoutHeight = previewWidth;
