@@ -17,6 +17,7 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+    private static final String LOG_TAG = "CameraPreviewSample";
     private Activity mActivity;
     private SurfaceHolder mHolder;
     private Camera mCamera;
@@ -47,6 +48,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         mCamera.stopPreview();
+
+        Log.v(LOG_TAG, "Desired Preview Size - w: " + width + ", h: " + height);
 
         Parameters mParam = mCamera.getParameters();
 
@@ -90,17 +93,25 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             }
         }
 
+        for (Size size : sizes) {
+            if ((size.width <= previewWidth) && (size.height <= previewHeight)) {
+                Log.v(LOG_TAG, "w: " + size.width + ", h: " + size.height);
+            }
+        }
+        
         mParam.setPreviewSize(previewWidth, previewHeight);
 
+        Log.v(LOG_TAG, "Preview Actual Size - w: " + previewWidth + ", h: " + previewHeight);
+
         // Adjust SurfaceView size
-        ViewGroup.LayoutParams layoutParams = this.getLayoutParams();
-        if(portrait) {
-            layoutParams.height = previewWidth;
-            layoutParams.width = previewHeight;
-        } else {
-            layoutParams.height = previewHeight;
-            layoutParams.width = previewWidth;
-        }
+//        ViewGroup.LayoutParams layoutParams = this.getLayoutParams();
+//        if(portrait) {
+//            layoutParams.height = previewWidth;
+//            layoutParams.width = previewHeight;
+//        } else {
+//            layoutParams.height = previewHeight;
+//            layoutParams.width = previewWidth;
+//        }
 
         float layoutHeight, layoutWidth;
         if (portrait) {
@@ -120,10 +131,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } else {
             fact = factW;
         }
+        ViewGroup.LayoutParams layoutParams = this.getLayoutParams();
         layoutParams.height = (int)(layoutHeight * fact);
         layoutParams.width = (int)(layoutWidth * fact);
         this.setLayoutParams(layoutParams);
 
+        Log.v(LOG_TAG, "Preview Layout Size - w: " + layoutParams.width + ", h: " + layoutParams.height);
+        
         mCamera.setParameters(mParam);
         mCamera.startPreview();
     }
