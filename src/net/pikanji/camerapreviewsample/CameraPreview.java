@@ -83,21 +83,26 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
 
         // Actual preview size will be one of the sizes obtained by getSupportedPreviewSize.
-        // It is the one that is the largest in both width and height no larger than given size in setPreviewSize.
+        // It is the one that has the largest width among the sizes of which both width and
+        // height no larger than given size in setPreviewSize.
         List<Size> sizes = mParam.getSupportedPreviewSizes();
+        int tmpHeight = 0;
+        int tmpWidth = 0;
         for (Size size : sizes) {
-            if ((size.width <= previewWidth) && (size.height <= previewHeight)) {
-                previewWidth = size.width;
-                previewHeight = size.height;
-                break;
+            if ((size.width > previewWidth) || (size.height > previewHeight)) {
+                continue;
+            }
+            if (tmpHeight < size.height) {
+                tmpWidth = size.width;
+                tmpHeight = size.height;
             }
         }
-
+        previewWidth = tmpWidth;
+        previewHeight = tmpHeight;
+        
         // Only for debugging
         for (Size size : sizes) {
-            if ((size.width <= previewWidth) && (size.height <= previewHeight)) {
-                Log.v(LOG_TAG, "w: " + size.width + ", h: " + size.height);
-            }
+            Log.v(LOG_TAG, "w: " + size.width + ", h: " + size.height);
         }
         
         mParam.setPreviewSize(previewWidth, previewHeight);
