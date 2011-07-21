@@ -13,10 +13,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         
         // Hide status-bar
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // Hide title-bar, must be before setContentView
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         
         setContentView(new CameraPreview(this));
     }
