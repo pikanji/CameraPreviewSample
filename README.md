@@ -7,3 +7,4 @@ GitHub URL: [https://github.com/pikanji/CameraPreviewSample](https://github.com/
 * minimum -- Minimum code implementing camera preview.
 * orientation -- Display in correct orientation.
 * aspectratio -- Display in correct aspect ratio.
+* aspectratio_refine -- Fixed a non-critical issue that onSurfaceChanged() is called twice.
