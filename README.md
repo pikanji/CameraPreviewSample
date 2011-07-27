@@ -3,6 +3,7 @@ CameraPreviewSample
 
 Over View
 ---------
+This project demonstrates how to implement a camera preview step-by-step.
 
 GitHub URL: [https://github.com/pikanji/CameraPreviewSample](https://github.com/pikanji/CameraPreviewSample)
 
@@ -12,6 +13,7 @@ GitHub URL: [https://github.com/pikanji/CameraPreviewSample](https://github.com/
 * aspectratio -- Display in correct aspect ratio.
 * aspectratio_refine -- Fixed a non-critical issue that onSurfaceChanged() is called twice.
 * resizable -- Includes UI to arbitrarily set camera preview size.
+* previewsize_fix -- Fixed a problem that preview couldn't start even with supported preview size.
 
 minimum
 -------
@@ -59,3 +61,15 @@ It still keeps the aspect ratio and scales it to fit to the display.
 * MainActivity.java -- Driver Activity to demonstrate the usage of CameraPreview.java.
     This file includes both code that utilizes CameraPreview and ResizeableCameraPreview, one of them commented out.
 * ResizableCameraPreview.java -- Extended class of CameraPreview allowing user to specify the preview size.
+
+picturesize_fix
+---------------
+This release includes a fix that solves the issue that the preview can't be started even with supported preview size.
+The solution was to set picture size with supported picture size, as well as preview size.
+This release also supported more display rotation, Surface.ROTATION_270 in addition to Surface.ROTATION_90. This affects only Android 2.2 and later.
+
+### Files
+The same as "resizable."
+
+### Known Issue
+If the display rotation is changed from Surface.ROTATION_90 to Surface.ROTATION_270 or vice versa, the rotation of the camera preview is not updated.

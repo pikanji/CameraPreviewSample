@@ -49,7 +49,7 @@ public class MainActivity extends Activity implements ResizableCameraPreview.Cal
         // Hide title-bar, must be before setContentView
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         
-        mPreview = new ResizableCameraPreview(this, true);
+        mPreview = new ResizableCameraPreview(this, false);
         LayoutParams previewLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         mPreview.setCallback(this);
 

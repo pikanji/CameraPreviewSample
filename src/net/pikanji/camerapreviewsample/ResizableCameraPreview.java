@@ -4,12 +4,12 @@ import java.util.List;
 
 import android.app.Activity;
 import android.hardware.Camera;
-import android.hardware.Camera.Size;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.widget.Toast;
 
 public class ResizableCameraPreview extends CameraPreview {
+    private static boolean DEBUGGING = true;
     private static final String LOG_TAG = "ResizableCameraPreviewSample";
     private Callback mCallback;
     private boolean mAddReversedSizes;
@@ -44,6 +44,36 @@ public class ResizableCameraPreview extends CameraPreview {
         }
     }
 
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        mCamera.stopPreview();
+        
+        Camera.Parameters cameraParams = mCamera.getParameters();
+        boolean portrait = isPortrait();
+
+        if (!mSurfaceConfiguring) {
+            Camera.Size previewSize = determinePreviewSize(portrait, width, height);
+            Camera.Size pictureSize = determinePictureSize(previewSize);
+            if (DEBUGGING) { Log.v(LOG_TAG, "Desired Preview Size - w: " + width + ", h: " + height); }
+            mPreviewSize = previewSize;
+            mPictureSize = pictureSize;
+            mSurfaceConfiguring = adjustSurfaceLayoutSize(previewSize, portrait, width, height);
+            if (mSurfaceConfiguring) {
+                return;
+            }
+        }
+
+        configureCameraParameters(cameraParams, portrait);
+        mSurfaceConfiguring = false;
+
+        try {
+            mCamera.startPreview();
+        } catch (Exception e) {
+            Toast.makeText(mActivity, "Failed to start preview: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.w(LOG_TAG, "Failed to start preview: " + e.getMessage());
+        }
+    }
+    
     /**
      * 
      * @param index selects preview size from the list returned by CameraPreview.getSupportedPreivewSizes().
@@ -57,9 +87,10 @@ public class ResizableCameraPreview extends CameraPreview {
         boolean portrait = isPortrait();
         
         Camera.Size previewSize = mPreviewSizes.get(index);
-        Log.v(LOG_TAG, "Requested Preview Size - w: " + previewSize.width + ", h: " + previewSize.height);
-        mPreviewWidth = previewSize.width;
-        mPreviewHeight = previewSize.height;
+        Camera.Size pictureSize = determinePictureSize(previewSize);
+        if (DEBUGGING) { Log.v(LOG_TAG, "Requested Preview Size - w: " + previewSize.width + ", h: " + previewSize.height); }
+        mPreviewSize = previewSize;
+        mPictureSize = pictureSize;
         boolean layoutChanged = adjustSurfaceLayoutSize(previewSize, portrait, width, height);
         if (layoutChanged) {
             mSurfaceConfiguring = true;
