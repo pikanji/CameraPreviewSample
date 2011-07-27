@@ -49,8 +49,8 @@ It is observed on Japanese device, IS03, so far.
 ### Files
 The same as the ones in "aspectratio."
 
-arbitrary_size
---------------
+resizable
+---------
 This release allows user to arbitrarily set the size of camera preview from the supported sizes.
 It still keeps the aspect ratio and scales it to fit to the display.
 
