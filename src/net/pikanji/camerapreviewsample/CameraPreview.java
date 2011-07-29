@@ -30,6 +30,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     protected Camera.Size mPreviewSize;
     protected Camera.Size mPictureSize;
     private int mSurfaceChangedCallDepth = 0;
+    private int mCameraId;
 
     /**
      * State flag: true when surface's layout size is set and surfaceChanged()
@@ -37,18 +38,32 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
      */
     protected boolean mSurfaceConfiguring = false;
 
-    public CameraPreview(Activity activity) {
+    public CameraPreview(Activity activity, int cameraId) {
         super(activity); // Always necessary
         mActivity = activity;
         mHolder = getHolder();
         mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            if (Camera.getNumberOfCameras() > cameraId) {
+                mCameraId = cameraId;
+            } else {
+                mCameraId = 0;
+            }
+        } else {
+            mCameraId = 0;
+        }
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         if (null == mCamera) {
-            mCamera = Camera.open();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+                mCamera = Camera.open(mCameraId);
+            } else {
+                mCamera = Camera.open();
+            }
             Camera.Parameters cameraParams = mCamera.getParameters();
             mPreviewSizes = cameraParams.getSupportedPreviewSizes();
             mPictureSizes = cameraParams.getSupportedPictureSizes();
@@ -137,10 +152,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             reqPreviewWidth = reqWidth;
             reqPreviewHeight = reqHeight;
         }
-
-        // Actual preview size will be one of the sizes obtained by getSupportedPreviewSize.
-        // It is the one that has the largest width among the sizes of which
-        // both width and height no larger than given size in setPreviewSize.
 
         if (DEBUGGING) {
             Log.v(LOG_TAG, "Listing all supported preview sizes");
@@ -251,7 +262,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             Display display = mActivity.getWindowManager().getDefaultDisplay();
             switch (display.getRotation()) {
                 case Surface.ROTATION_0: // This is display orientation
-                    angle = 90;           // This is camera orientation
+                    angle = 90; // This is camera orientation
                     break;
                 case Surface.ROTATION_90:
                     angle = 0;
@@ -282,6 +293,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        stop();
+    }
+    
+    public void stop() {
         if (null == mCamera) {
             return;
         }

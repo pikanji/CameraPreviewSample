@@ -1,11 +1,19 @@
 
 package net.pikanji.camerapreviewsample;
-/*
+
+/////////////////////////////////////////////////////////////////////////////
+//Sample driver class to demonstrate the use of CameraPreview class.
+/////////////////////////////////////////////////////////////////////////////
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
 
 public class MainActivity extends Activity {
-
+    private CameraPreview mPreview;
+    private FrameLayout mLayout;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,11 +24,34 @@ public class MainActivity extends Activity {
         // Hide title-bar, must be before setContentView
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         
-        setContentView(new CameraPreview(this));
+        mLayout = new FrameLayout(this);
+        setContentView(mLayout);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Set the second argument by your choice.
+        // Usually, 0 for back-facing camera, 1 for front-facing camera.
+        // If the OS is pre-gingerbreak, this does not have any effect.
+        mPreview = new CameraPreview(this, 0);
+        LayoutParams previewLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        mLayout.addView(mPreview, 0, previewLayoutParams);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPreview.stop();
+        mPreview = null;
     }
 }
-*/
 
+
+/////////////////////////////////////////////////////////////////////////////
+//Sample driver class to demonstrate the use of ResizableCameraPreview class.
+/////////////////////////////////////////////////////////////////////////////
+/*
 import java.util.List;
 
 import android.app.Activity;
@@ -48,10 +79,6 @@ public class MainActivity extends Activity implements ResizableCameraPreview.Cal
 
         // Hide title-bar, must be before setContentView
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
-        
-        mPreview = new ResizableCameraPreview(this, false);
-        LayoutParams previewLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        mPreview.setCallback(this);
 
         Spinner spinner = new Spinner(this);
         LayoutParams spinnerLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -61,7 +88,6 @@ public class MainActivity extends Activity implements ResizableCameraPreview.Cal
         spinner.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
         
         mLayout = new FrameLayout(this);
-        mLayout.addView(mPreview, previewLayoutParams);
         mLayout.addView(spinner, spinnerLayoutParams);
         
         setContentView(mLayout);
@@ -94,4 +120,24 @@ public class MainActivity extends Activity implements ResizableCameraPreview.Cal
             // do nothing
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Set the second argument by your choice.
+        // Usually, 0 for back-facing camera, 1 for front-facing camera.
+        // If the OS is pre-gingerbreak, this does not have any effect.
+        mPreview = new ResizableCameraPreview(this, 0, false);
+        LayoutParams previewLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        mPreview.setCallback(this);
+        mLayout.addView(mPreview, 0, previewLayoutParams);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPreview.stop();
+        mPreview = null;
+    }
 }
+*/

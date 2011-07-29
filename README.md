@@ -25,7 +25,7 @@ This release is a minimum implementation of camera preview, which may display th
 
 orientation
 -----------
-This release handles the orientation change to dispaly in the correct orientation.
+This release handles the orientation change to display in the correct orientation.
 
 ### Files
 The same as the ones in "minimum."
@@ -72,4 +72,19 @@ This release also supported more display rotation, Surface.ROTATION_270 in addit
 The same as "resizable."
 
 ### Known Issue
-If the display rotation is changed from Surface.ROTATION_90 to Surface.ROTATION_270 or vice versa, the rotation of the camera preview is not updated.
+* If the display rotation is changed from Surface.ROTATION_90 to Surface.ROTATION_270 or vice versa, the rotation of the camera preview is not updated.
+* Orientation is not correct on an optimus pad (or all Honeycomb).
+
+multicamera
+-----------
+This release supports multiple camera.
+If the device has more than one camera on it, the user can choose a camera to display the camera preview.
+CameraPreview (and ResizableCameraPreview) takes a camera ID, which is usually 0 for back-facing camera and 1 for front-facing camera if exists.
+To switch between cameras, call stop() and instantiate another camera preview object with different camera ID.
+This release also shows how to stop the camera preview when it is not on the foreground.
+Stopping camera preview prevents from wasting the battery power and blocking other applications to use camera device.
+
+### Files
+The same as "picturesize_fix."
+
+
