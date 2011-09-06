@@ -87,4 +87,11 @@ Stopping camera preview prevents from wasting the battery power and blocking oth
 ### Files
 The same as "picturesize_fix."
 
+practical
+---------
+This version allows user class to specify the size and position of the camera preview.
+Also, implemented setter for a callback called on preview-ready, and wrapper for Camera.set*Callback.
+
+### Files
+The same as "multicamera."
 
