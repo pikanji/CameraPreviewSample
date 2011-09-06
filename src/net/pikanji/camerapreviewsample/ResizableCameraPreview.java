@@ -2,6 +2,8 @@ package net.pikanji.camerapreviewsample;
 
 import java.util.List;
 
+import net.pikanji.camerapreviewsample.CameraPreview.LayoutMode;
+
 import android.app.Activity;
 import android.hardware.Camera;
 import android.util.Log;
@@ -19,8 +21,8 @@ public class ResizableCameraPreview extends CameraPreview {
      * @param adjustByAspectRatio
      * @param addReversedSizes is set to true to add reversed values of supported preview-sizes to the list.
      */
-    public ResizableCameraPreview(Activity activity, int cameraId, boolean addReversedSizes) {
-        super(activity, cameraId);
+    public ResizableCameraPreview(Activity activity, int cameraId, LayoutMode mode, boolean addReversedSizes) {
+        super(activity, cameraId, mode);
         mAddReversedSizes = addReversedSizes;
     }
 
@@ -30,7 +32,7 @@ public class ResizableCameraPreview extends CameraPreview {
         super.surfaceCreated(holder);
         
         if (mAddReversedSizes) {
-            List<Camera.Size> sizes = mPreviewSizes;
+            List<Camera.Size> sizes = mPreviewSizeList;
             int length = sizes.size();
             for (int i = 0; i < length; i++) {
                 Camera.Size size = sizes.get(i);
@@ -86,7 +88,7 @@ public class ResizableCameraPreview extends CameraPreview {
         Camera.Parameters cameraParams = mCamera.getParameters();
         boolean portrait = isPortrait();
         
-        Camera.Size previewSize = mPreviewSizes.get(index);
+        Camera.Size previewSize = mPreviewSizeList.get(index);
         Camera.Size pictureSize = determinePictureSize(previewSize);
         if (DEBUGGING) { Log.v(LOG_TAG, "Requested Preview Size - w: " + previewSize.width + ", h: " + previewSize.height); }
         mPreviewSize = previewSize;
@@ -107,7 +109,7 @@ public class ResizableCameraPreview extends CameraPreview {
     }
 
     public List<Camera.Size> getSupportedPreivewSizes() {
-        return mPreviewSizes;
+        return mPreviewSizeList;
     }
 
     public void setCallback(Callback callback) {
