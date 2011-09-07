@@ -72,21 +72,19 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } else {
             mCameraId = 0;
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            mCamera = Camera.open(mCameraId);
+        } else {
+            mCamera = Camera.open();
+        }
+        Camera.Parameters cameraParams = mCamera.getParameters();
+        mPreviewSizeList = cameraParams.getSupportedPreviewSizes();
+        mPictureSizeList = cameraParams.getSupportedPictureSizes();
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        if (null == mCamera) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-                mCamera = Camera.open(mCameraId);
-            } else {
-                mCamera = Camera.open();
-            }
-            Camera.Parameters cameraParams = mCamera.getParameters();
-            mPreviewSizeList = cameraParams.getSupportedPreviewSizes();
-            mPictureSizeList = cameraParams.getSupportedPictureSizes();
-        }
-
         try {
             mCamera.setPreviewDisplay(mHolder);
         } catch (IOException e) {

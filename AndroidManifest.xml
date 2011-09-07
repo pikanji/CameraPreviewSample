@@ -13,7 +13,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".CameraPreviewSampleActivity" android:label="@string/app_name" />
+        <activity android:name=".CameraPreviewTestActivity" android:label="@string/app_name" />
     </application>
     <uses-permission android:name="android.permission.CAMERA" />
 </manifest>

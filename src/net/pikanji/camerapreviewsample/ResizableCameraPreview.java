@@ -2,19 +2,19 @@ package net.pikanji.camerapreviewsample;
 
 import java.util.List;
 
-import net.pikanji.camerapreviewsample.CameraPreview.LayoutMode;
-
 import android.app.Activity;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.widget.Toast;
 
+/**
+ * CameraPreview class that is extended only for the purpose of testing CameraPreview class.
+ * This class is added functionality to set arbitrary preview size, and removed automated retry function to start preview on exception.
+ */
 public class ResizableCameraPreview extends CameraPreview {
     private static boolean DEBUGGING = true;
     private static final String LOG_TAG = "ResizableCameraPreviewSample";
-    private Callback mCallback;
-    private boolean mAddReversedSizes;
 
     /**
      * @param activity
@@ -23,15 +23,7 @@ public class ResizableCameraPreview extends CameraPreview {
      */
     public ResizableCameraPreview(Activity activity, int cameraId, LayoutMode mode, boolean addReversedSizes) {
         super(activity, cameraId, mode);
-        mAddReversedSizes = addReversedSizes;
-    }
-
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        super.surfaceCreated(holder);
-        
-        if (mAddReversedSizes) {
+        if (addReversedSizes) {
             List<Camera.Size> sizes = mPreviewSizeList;
             int length = sizes.size();
             for (int i = 0; i < length; i++) {
@@ -39,10 +31,6 @@ public class ResizableCameraPreview extends CameraPreview {
                 Camera.Size revSize = mCamera.new Size(size.height, size.width);
                 sizes.add(revSize);
             }
-        }
-        
-        if (null != mCallback) {
-            mCallback.cameraOpened();
         }
     }
 
@@ -110,13 +98,5 @@ public class ResizableCameraPreview extends CameraPreview {
 
     public List<Camera.Size> getSupportedPreivewSizes() {
         return mPreviewSizeList;
-    }
-
-    public void setCallback(Callback callback) {
-        mCallback = callback;
-    }
-
-    public interface Callback {
-        public void cameraOpened();
     }
 }

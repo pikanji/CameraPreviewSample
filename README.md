@@ -91,7 +91,12 @@ practical
 ---------
 This version allows user class to specify the size and position of the camera preview.
 Also, implemented setter for a callback called on preview-ready, and wrapper for Camera.set*Callback.
+Refined sample driver activities.
 
 ### Files
-The same as "multicamera."
+* CameraPreview.java -- Primary file implementing camera preview feature.
+* MainActivity.java -- UI that allows users to select a sample activity or a test activity to open.
+* CameraPreviewSampleActivity.java -- Driver Activity to demonstrate the usage of CameraPreview.java.
+* CameraPreviewTestActivity.java -- Driver Activity for testing CameraPreview.java.
+* ResizableCameraPreview.java -- Extended class of CameraPreview allowing user to specify the preview size, for the purpose of testing.
 
