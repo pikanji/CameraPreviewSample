@@ -14,6 +14,8 @@ GitHub URL: [https://github.com/pikanji/CameraPreviewSample](https://github.com/
 * aspectratio_refine -- Fixed a non-critical issue that onSurfaceChanged() is called twice.
 * resizable -- Includes UI to arbitrarily set camera preview size.
 * previewsize_fix -- Fixed a problem that preview couldn't start even with supported preview size.
+* multicamera -- Supports multiple cameras.
+* practical -- Allows the user program to set the layout size, position, and callbacks.
 
 minimum
 -------
