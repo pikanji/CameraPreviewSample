@@ -1,6 +1,8 @@
 CameraPreviewSample
 ===================
 
+Please note that this project is quite outdated. Sorry, but I cannot support since I'm away from Android several years already.
+
 Over View
 ---------
 This project demonstrates how to implement a camera preview step-by-step.
